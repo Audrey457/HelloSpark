@@ -4,7 +4,7 @@ from pyspark import SparkConf
 from pyspark.sql import *
 
 from lib.logger import Log4J
-from lib.utils import get_spark_app_config, load_survey_df
+from lib.utils import *
 
 if __name__ == "__main__":
     # En utilisant un fichier de config
@@ -34,7 +34,13 @@ if __name__ == "__main__":
     # logger.info(conf_out.toDebugString())
 
     titanic_df = load_survey_df(spark, sys.argv[1])
-    titanic_df.show()
+    partitioned_titanic_df = titanic_df.repartition(2)
+    count_df = count_by_dest(partitioned_titanic_df)
+    count_df.show()
 
+    logger.info(count_df.collect())
+
+    #Pour que l'application ne s'arrête pas et que l'on puisse investiguer avec Spark UI
+    input("Press enter")
     logger.info("Finished HelloSpark")
     spark.stop()
