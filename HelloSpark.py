@@ -7,7 +7,6 @@ from pyspark.sql import *
 from lib.logger import Log4J
 from lib.utils import *
 
-TitanicRecord = namedtuple("TitanicRecord", ["name", "sex", "age", "dest"])
 if __name__ == "__main__":
     # En utilisant un fichier de config
     conf = get_spark_app_config("SPARK_APP_CONFIGS")
