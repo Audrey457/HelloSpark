@@ -15,12 +15,12 @@ class UtilsTestCase(TestCase):
             .getOrCreate()
 
     def test_datafile_loading(self):
-        sample_df = load_survey_df(self.spark, "data/titanic.csv")
+        sample_df = load_titanic_df(self.spark, "data/titanic.csv")
         result_count = sample_df.count()
         self.assertEqual(result_count, 1309, "Record count should be 1309")
 
     def test_country_count(self):
-        sample_df = load_survey_df(self.spark, "data/titanic.csv")
+        sample_df = load_titanic_df(self.spark, "data/titanic.csv")
         count_list = count_by_dest(sample_df).collect()
         count_dict = dict()
         for row in count_list:

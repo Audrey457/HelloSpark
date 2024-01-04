@@ -1,14 +1,16 @@
 import sys
+from collections import namedtuple
 
-from pyspark import SparkConf
+from pyspark import SparkConf, SparkContext
 from pyspark.sql import *
 
 from lib.logger import Log4J
 from lib.utils import *
 
+TitanicRecord = namedtuple("TitanicRecord", ["name", "sex", "age", "dest"])
 if __name__ == "__main__":
     # En utilisant un fichier de config
-    conf = get_spark_app_config()
+    conf = get_spark_app_config("SPARK_APP_CONFIGS")
     #harcodé
     # conf = SparkConf()
     # conf.set("spark.app.name", "Hello Spark")
@@ -22,7 +24,6 @@ if __name__ == "__main__":
     #     .master(("local[3]")) \
     #     .getOrCreate()
 
-
     logger = Log4J(spark)
 
     if len(sys.argv) != 2:
@@ -33,14 +34,10 @@ if __name__ == "__main__":
     # conf_out = spark.sparkContext.getConf()
     # logger.info(conf_out.toDebugString())
 
-    titanic_df = load_survey_df(spark, sys.argv[1])
+    #Dataframe
+    titanic_df = load_titanic_df(spark, sys.argv[1])
     partitioned_titanic_df = titanic_df.repartition(2)
     print(titanic_df.count())
     count_df = count_by_dest(partitioned_titanic_df)
-    
-    logger.info(count_df.collect())
 
-    #Pour que l'application ne s'arrête pas et que l'on puisse investiguer avec Spark UI
-    input("Press enter")
-    logger.info("Finished HelloSpark")
-    spark.stop()
+    logger.info(count_df.collect())
