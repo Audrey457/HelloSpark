@@ -35,9 +35,9 @@ if __name__ == "__main__":
 
     titanic_df = load_survey_df(spark, sys.argv[1])
     partitioned_titanic_df = titanic_df.repartition(2)
+    print(titanic_df.count())
     count_df = count_by_dest(partitioned_titanic_df)
-    count_df.show()
-
+    
     logger.info(count_df.collect())
 
     #Pour que l'application ne s'arrête pas et que l'on puisse investiguer avec Spark UI
